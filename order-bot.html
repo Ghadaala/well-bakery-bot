@@ -70,14 +70,19 @@
 
     document.getElementById("orderForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const name = document.getElementById("name").value;
-      const coffee = document.getElementById("coffee").value;
-      const size = document.getElementById("size").value;
-      const notes = document.getElementById("notes").value;
+
+      const data = {
+        name: document.getElementById("name").value,
+        order: document.getElementById("coffee").value + " - " + document.getElementById("size").value,
+        notes: document.getElementById("notes").value
+      };
 
       fetch(scriptURL, {
         method: "POST",
-        body: new FormData(document.getElementById("orderForm"))
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       .then(response => {
         document.getElementById("successMsg").innerText = "تم تسجيل طلبك بنجاح!";
@@ -90,3 +95,4 @@
   </script>
 </body>
 </html>
+
