@@ -89,6 +89,7 @@
         document.getElementById("orderForm").reset();
       })
       .catch(error => {
+        console.error("خطأ:", error);
         document.getElementById("successMsg").innerText = "حدث خطأ أثناء الإرسال، حاول مرة أخرى.";
       });
     });
