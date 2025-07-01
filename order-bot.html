@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,7 +8,6 @@
     body {
       font-family: 'Tahoma', sans-serif;
       background-color: #f5f2e7;
-      margin: 0;
       padding: 20px;
       direction: rtl;
     }
@@ -79,21 +79,21 @@
 
       fetch(scriptURL, {
         method: "POST",
-        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify(data)
       })
-      .then(response => {
-        document.getElementById("successMsg").innerText = "تم تسجيل طلبك بنجاح!";
+      .then(response => response.text())
+      .then(responseText => {
+        document.getElementById("successMsg").innerText = responseText || "✅ تم تسجيل طلبك بنجاح!";
         document.getElementById("orderForm").reset();
       })
       .catch(error => {
-        console.error("خطأ:", error);
-        document.getElementById("successMsg").innerText = "حدث خطأ أثناء الإرسال، حاول مرة أخرى.";
+        document.getElementById("successMsg").innerText = "❌ حدث خطأ أثناء الإرسال، تأكد من الاتصال أو جرب لاحقًا.";
+        console.error("Error:", error);
       });
     });
   </script>
 </body>
 </html>
-
