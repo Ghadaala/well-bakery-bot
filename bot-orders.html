@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مساعد ويل بيكري - الطلبات والأسئلة</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3efe8;
+            padding: 20px;
+            line-height: 1.8;
+            direction: rtl;
+        }
+        h1 {
+            color: #4a2c2a;
+            text-align: center;
+        }
+        textarea, input, button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        #chat-box {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>مرحبًا بك في مساعد ويل بيكري</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="userInput" placeholder="اكتب سؤالك أو طلبك هنا..." onkeypress="if(event.key==='Enter') getResponse();">
+    <button onclick="getResponse()">إرسال</button>
+
+    <script>
+        const faqPairs = [
+            {keywords: ["منيو"], reply: "يمكنك تصفح القائمة أعلاه، أو سؤالي عن الأسعار مباشرة."},
+            {keywords: ["السعر", "أسعار"], reply: "أسعارنا تتراوح بين 10 ﷼ و18 ﷼ حسب نوع القهوة."},
+            {keywords: ["أنواع", "قهوة"], reply: "نقدم إسبرسو، كابتشينو، لاتيه، أمريكانو، موكا مثلجة."},
+            {keywords: ["طلب", "أطلب", "أرغب", "شراء"], reply: "يرجى كتابة نوع القهوة المطلوبة والحجم، وسنقوم بتسجيل طلبك."}
+        ];
+
+        const orders = [];
+        const chatBox = document.getElementById("chat-box");
+
+        function getResponse() {
+            const input = document.getElementById("userInput").value.trim();
+            const text = input.toLowerCase();
+            let response = "عذرًا، لم أفهم سؤالك. جرب: ما الأسعار؟ أو هل أستطيع طلب لاتيه؟";
+
+            for (const pair of faqPairs) {
+                if (pair.keywords.some(k => text.includes(k))) {
+                    response = pair.reply;
+                    break;
+                }
+            }
+
+            if (text.includes("أطلب") || text.includes("طلب") || text.includes("أرغب") || text.includes("شراء")) {
+                orders.push({order: input, time: new Date().toLocaleString()});
+            }
+
+            chatBox.innerHTML += `<div><strong>أنت:</strong> ${input}</div>`;
+            chatBox.innerHTML += `<div><strong>المساعد:</strong> ${response}</div>`;
+            document.getElementById("userInput").value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>

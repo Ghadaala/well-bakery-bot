@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل طلب القهوة</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f5f2e7;
+      padding: 20px;
+      direction: rtl;
+    }
+    h2 {
+      color: #4e342e;
+    }
+    label, input, select, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #6d4c41;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>مرحبًا! يمكنك تسجيل طلبك هنا:</h2>
+  <form id="orderForm">
+    <label for="name">الاسم:</label>
+    <input type="text" id="name" required />
+
+    <label for="coffee">اختر نوع القهوة:</label>
+    <select id="coffee" required>
+      <option value="">اختر...</option>
+      <option>إسبريسو</option>
+      <option>لاتيه</option>
+      <option>كابتشينو</option>
+      <option>موكا مثلجة</option>
+      <option>أمريكانو</option>
+    </select>
+
+    <label for="size">اختر الحجم:</label>
+    <select id="size" required>
+      <option value="">اختر...</option>
+      <option>صغير</option>
+      <option>متوسط</option>
+      <option>كبير</option>
+    </select>
+
+    <label for="notes">ملاحظات إضافية:</label>
+    <input type="text" id="notes" placeholder="مثلاً: بدون سكر" />
+
+    <button type="submit">إرسال الطلب</button>
+    <div class="success" id="successMsg"></div>
+  </form>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyTcwbN3jj4jiDPkkcboQpVCqLadRqFKIRbW5XyP9WzDdzCTFXcrK79UW7UvDe7bvr18g/exec";
+
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("name").value,
+        order: document.getElementById("coffee").value + " - " + document.getElementById("size").value,
+        notes: document.getElementById("notes").value
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(responseText => {
+        document.getElementById("successMsg").innerText = responseText || "✅ تم تسجيل طلبك بنجاح!";
+        document.getElementById("orderForm").reset();
+      })
+      .catch(error => {
+        document.getElementById("successMsg").innerText = "❌ حدث خطأ أثناء الإرسال، تأكد من الاتصال أو جرب لاحقًا.";
+        console.error("Error:", error);
+      });
+    });
+  </script>
+</body>
+</html>
+
