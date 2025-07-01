@@ -65,27 +65,35 @@
   </form>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxQDrxWGw87ahPmoqfd2N3r0nht_yuShjMo5_Ik4xrbO-ygRTgb5JAushuuQflpvBG2Ow/exec";
+    const sheetAPI = "https://api.sheetbest.com/sheets/42b55ada-3711-4632-9f65-6ff2628bacbe";
 
     document.getElementById("orderForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const formData = new FormData();
-      formData.append('name', document.getElementById("name").value);
-      formData.append('order', document.getElementById("coffee").value + " - " + document.getElementById("size").value);
-      formData.append('notes', document.getElementById("notes").value);
+      const data = {
+        "الاسم": document.getElementById("name").value,
+        "نوع الطلب": document.getElementById("coffee").value + " - " + document.getElementById("size").value,
+        "الملاحظات": document.getElementById("notes").value,
+        "الوقت": new Date().toLocaleString()
+      };
 
-      fetch(scriptURL, {
+      fetch(sheetAPI, {
         method: "POST",
-        body: formData
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
       })
-      .then(response => response.text())
-      .then(responseText => {
-        document.getElementById("successMsg").innerText = responseText || "✅ تم تسجيل طلبك بنجاح!";
+      .then(response => {
+        if (!response.ok) throw new Error("Network error");
+        return response.json();
+      })
+      .then(result => {
+        document.getElementById("successMsg").innerText = "✅ تم تسجيل طلبك بنجاح!";
         document.getElementById("orderForm").reset();
       })
       .catch(error => {
-        document.getElementById("successMsg").innerText = "❌ حدث خطأ أثناء الإرسال، تأكد من الاتصال أو جرب لاحقًا.";
+        document.getElementById("successMsg").innerText = "❌ حدث خطأ أثناء الإرسال، حاول مجددًا.";
         console.error("Error:", error);
       });
     });
