@@ -70,18 +70,14 @@
     document.getElementById("orderForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const data = {
-        name: document.getElementById("name").value,
-        order: document.getElementById("coffee").value + " - " + document.getElementById("size").value,
-        notes: document.getElementById("notes").value
-      };
+      const formData = new FormData();
+      formData.append('name', document.getElementById("name").value);
+      formData.append('order', document.getElementById("coffee").value + " - " + document.getElementById("size").value);
+      formData.append('notes', document.getElementById("notes").value);
 
       fetch(scriptURL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+        body: formData
       })
       .then(response => response.text())
       .then(responseText => {
@@ -96,4 +92,5 @@
   </script>
 </body>
 </html>
+
 
