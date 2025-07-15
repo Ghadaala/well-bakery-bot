@@ -1,0 +1,158 @@
+<div id="chatbot">
+  <h3>شات بوت الطلبات ☕</h3>
+  <form id="orderForm">
+    <label>الاسم:</label>
+    <input type="text" id="name" required />
+    <label>رقم الجوال:</label>
+    <input type="tel" id="phone" placeholder="05xxxxxxxx" required />
+    <label>اختر نوع القهوة:</label>
+    <select id="coffee" required>
+      <option value="" />اختر...
+      <option />إسبريسو
+      <option />لاتيه
+      <option />كابتشينو
+      <option />موكا مثلجة
+      <option />أمريكانو
+    </select>
+    <label>اختر الحجم:</label>
+    <select id="size" required>
+      <option value="" />اختر...
+      <option />صغير
+      <option />متوسط
+      <option />كبير
+    </select>
+    <label>ملاحظات إضافية:</label>
+    <input type="text" id="notes" placeholder="مثلاً: بدون سكر" />
+    <button type="submit">إرسال الطلب</button>
+    <div id="successMsg"></div>
+  </form>
+</div>
+
+<style>
+#chatbot {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #fff7f0;
+  color: #444;
+  padding: 15px;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border: 1px solid #ddd;
+  font-family: Tahoma, sans-serif;
+}
+#chatbot h3 {
+  text-align: center;
+  font-weight: bold;
+  color: #6d4c41;
+  margin-top: 0;
+}
+label {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+input, select {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+button {
+  background-color: #6d4c41;
+  color: white;
+  border: none;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+button:hover {
+  background-color: #5a3c34;
+}
+.success {
+  margin-top: 8px;
+  color: green;
+  font-size: 13px;
+}
+.error {
+  margin-top: 8px;
+  color: red;
+  font-size: 13px;
+}
+</style>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbwgdVdXrTb7L0s761J3YZeOUe9nOKEOy0eBv_70akxS7jW-_KhQCK7KySZry4eDp28a/exec";
+const paymentPage = "https://wellbakeryy.blogspot.com/p/checkout.html";
+
+document.getElementById("orderForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const coffee = document.getElementById("coffee").value.trim();
+  const size = document.getElementById("size").value.trim();
+  const notes = document.getElementById("notes").value.trim();
+
+  const data = {
+    name: name,
+    phone: phone,
+    order: coffee + " - " + size,
+    notes: notes
+  };
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const msgEl = document.getElementById("successMsg");
+
+    if (result.status === "success") {
+      msgEl.innerText = result.message || "✅ تم إرسال طلبك بنجاح! جاري تحويلك إلى صفحة الدفع…";
+      msgEl.className = "success";
+      document.getElementById("orderForm").reset();
+
+      setTimeout(() => {
+        const params = new URLSearchParams({
+          name: name,
+          phone: phone,
+          order: coffee + " - " + size,
+          notes: notes,
+          orderId: result.orderId  // نمرر orderId
+        });
+        window.location.href = `${paymentPage}?${params.toString()}`;
+      }, 1500);
+
+    } else {
+      msgEl.innerText = `❌ ${result.message || "حدث خطأ أثناء إرسال الطلب."}`;
+      msgEl.className = "error";
+    }
+  })
+  .catch(error => {
+    const msgEl = document.getElementById("successMsg");
+    msgEl.innerText = "❌ حدث خطأ أثناء الإرسال. حاول مجددًا.";
+    msgEl.className = "error";
+    console.error("Error:", error);
+  });
+});
+</script>
+<script>
+const allowedPages = [
+  "https://wellbakeryy.blogspot.com/",
+  "https://wellbakeryy.blogspot.com/p/blog-page_4.html"
+];
+
+if (!allowedPages.includes(window.location.href)) {
+  const chatbot = document.getElementById("chatbot");
+  if (chatbot) chatbot.style.display = "none";
+}
+</script>

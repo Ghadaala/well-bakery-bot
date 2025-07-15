@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<title>اتصل بنا - ويل بيكري</title>
+<style>
+  body {
+    font-family: 'Tahoma', sans-serif;
+    background-color: #f9f5ec;
+    direction: rtl;
+    padding: 20px;
+    margin-bottom: 60px; /* مساحة للهامش السفلي */
+  }
+  #chat-box {
+    margin: 20px 0;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+  .user-msg {
+    color: #333;
+    margin: 5px 0;
+  }
+  .bot-reply {
+    color: #4CAF50;
+    margin: 5px 0;
+  }
+  #contact-info {
+    margin-top: 30px;
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 18px;
+  }
+  #contact-info a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    gap: 8px;
+  }
+  #contact-info svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #4a2c2a;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    z-index: 1000;
+  }
+  footer a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: bold;
+  }
+  footer svg {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+</head>
+<body>
+
+<h2>📞 اتصل بنا</h2>
+
+<p>نحن هنا للإجابة على أسئلتك واستفساراتك. جرب شات المساعد أدناه أو تواصل معنا عبر الوسائل الأخرى.</p>
+
+<!-- شات بوت الأسئلة -->
+<div id="chat-box"></div>
+
+<input type="text" id="userInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') getResponse();" />
+<button onclick="getResponse()">إرسال</button>
+
+<!-- معلومات الاتصال مع أيقونات -->
+<div id="contact-info">
+  <h3>وسائل أخرى للتواصل:</h3>
+
+  <a href="https://wa.me/966551567640" target="_blank" aria-label="واتساب">
+    <!-- أيقونة واتساب -->
+    <svg viewBox="0 0 24 24" fill="#25D366" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20.52 3.48a11.85 11.85 0 00-16.76 16.75l-1.77 5.12 5.26-1.74a11.85 11.85 0 0013.27-20.13zm-8.63 15.21c-2.28 0-4.49-.62-6.38-1.78l-.46-.27-3.12 1.04 1.05-3.04-.3-.49a8.46 8.46 0 01-1.31-4.52 8.66 8.66 0 118.66 8.66z" />
+      <path d="M17.25 14.42c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06a6.24 6.24 0 01-1.83-1.13 6.91 6.91 0 01-1.28-1.59c-.14-.24-.02-.36.12-.48.12-.12.26-.3.4-.44.14-.14.18-.24.28-.4.1-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42a1.15 1.15 0 00-.52.02c-.16 0-.42.18-.64.42-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.7 2.58 4.12 3.62.58.25 1.03.4 1.38.52.58.18 1.11.15 1.53.09.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z" fill="#fff"/>
+    </svg>
+    واتساب: 0551567640
+  </a>
+
+  <a href="https://www.instagram.com/well.bakery.sa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="إنستغرام">
+    <!-- أيقونة إنستغرام -->
+    <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zM12 7.07a4.93 4.93 0 100 9.86 4.93 4.93 0 000-9.86zm0 8.15a3.22 3.22 0 110-6.44 3.22 3.22 0 010 6.44zm4.9-8.43a1.15 1.15 0 11-2.3 0 1.15 1.15 0 012.3 0z"/>
+    </svg>
+    إنستغرام: @well.bakery.sa
+  </a>
+
+  <a href="mailto:info@westernsgate.com" aria-label="البريد الإلكتروني">
+    <!-- أيقونة إيميل -->
+    <svg viewBox="0 0 24 24" fill="#333" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18v-8l7.88 6.3a1 1 0 001.24 0L20 10v8H4z"/>
+    </svg>
+    البريد الإلكتروني: info@westernsgate.com
+  </a>
+</div>
+
+<footer>
+  <a href="https://wa.me/966551567640" target="_blank" aria-label="واتساب">
+    <svg viewBox="0 0 24 24" fill="#25D366" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20.52 3.48a11.85 11.85 0 00-16.76 16.75l-1.77 5.12 5.26-1.74a11.85 11.85 0 0013.27-20.13zm-8.63 15.21c-2.28 0-4.49-.62-6.38-1.78l-.46-.27-3.12 1.04 1.05-3.04-.3-.49a8.46 8.46 0 01-1.31-4.52 8.66 8.66 0 118.66 8.66z" />
+      <path d="M17.25 14.42c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06a6.24 6.24 0 01-1.83-1.13 6.91 6.91 0 01-1.28-1.59c-.14-.24-.02-.36.12-.48.12-.12.26-.3.4-.44.14-.14.18-.24.28-.4.1-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.42a1.15 1.15 0 00-.52.02c-.16 0-.42.18-.64.42-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.7 2.58 4.12 3.62.58.25 1.03.4 1.38.52.58.18 1.11.15 1.53.09.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z" fill="#fff"/>
+    </svg>
+    واتساب
+  </a> |
+  <a href="https://www.instagram.com/well.bakery.sa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="إنستغرام">
+    <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zM12 7.07a4.93 4.93 0 100 9.86 4.93 4.93 0 000-9.86zm0 8.15a3.22 3.22 0 110-6.44 3.22 3.22 0 010 6.44zm4.9-8.43a1.15 1.15 0 11-2.3 0 1.15 1.15 0 012.3 0z"/>
+    </svg>
+    إنستغرام
+  </a> |
+  <a href="mailto:info@westernsgate.com" aria-label="البريد الإلكتروني">
+    <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18v-8l7.88 6.3a1 1 0 001.24 0L20 10v8H4z"/>
+    </svg>
+    إيميل
+  </a>
+</footer>
+
+<script>
+const faqPairs = [
+  { keywords: ["منيو"], reply: "يمكنك تصفح القائمة أعلاه، أو سؤالي عن الأسعار مباشرة." },
+  { keywords: ["السعر", "أسعار"], reply: "أسعارنا تتراوح بين 10 ﷼ و18 ﷼ حسب نوع القهوة." },
+  { keywords: ["أوقات", "العمل"], reply: "نحن متاحون يوميًا من 7 صباحًا حتى 11 مساءً." },
+  { keywords: ["أنواع", "قهوة"], reply: "نقدم: إسبرسو، كابتشينو، لاتيه، أمريكانو، موكا مثلجة." },
+  { keywords: ["توصيل"], reply: "خدمة التوصيل متوفرة عبر واتساب." },
+  { keywords: ["أحجام", "حجم"], reply: "نقدم الحجم الصغير، المتوسط، والكبير حسب الطلب." },
+  { keywords: ["كافيين"], reply: "القهوة العادية تحتوي كمية كافيين معتدلة، أما الإسبريسو فهي أقوى." },
+  { keywords: ["مثلج", "بارد"], reply: "نعم، لدينا مشروبات مثلجة مثل موكا مثلجة ولاتيه بارد." },
+  { keywords: ["حبوب", "بن"], reply: "نستخدم حبوب بن 100% عربية عالية الجودة." },
+  { keywords: ["في المنزل", "brew"], reply: "يمكنك إعداد قهوتك المفضلة في المنزل وسنرشدك بالخطوات لاحقًا." }
+];
+
+const chatBox = document.getElementById("chat-box");
+
+function getResponse() {
+  const input = document.getElementById("userInput").value.trim();
+  const text = input.toLowerCase();
+  let reply = `
+    عذرًا، لم أفهم سؤالك. يمكنك التحدث معنا مباشرة عبر 
+    <a href="https://wa.me/966551567640" target="_blank">واتساب</a>.
+  `;
+
+  for (const pair of faqPairs) {
+    if (pair.keywords.some(k => text.includes(k))) {
+      reply = pair.reply;
+      break;
+    }
+  }
+
+  chatBox.innerHTML += `<div class="user-msg"><strong>أنت:</strong> ${input}</div>`;
+  chatBox.innerHTML += `<div class="bot-reply"><strong>المساعد:</strong> ${reply}</div>`;
+
+  document.getElementById("userInput").value = "";
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
+
+</body>
+</html>

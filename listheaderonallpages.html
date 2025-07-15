@@ -1,0 +1,69 @@
+<style>
+/* Style for the navigation container */
+.custom-nav-bar {
+  background-color: #FFFFFF; /* White background */
+  padding: 10px 20px;
+  border-bottom: 1px solid #f0f0f0; /* Light border at the bottom */
+  text-align: center; /* Center the navigation links */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+/* Style for the unordered list */
+.custom-nav-bar ul {
+  list-style: none; /* Remove bullet points */
+  margin: 0;
+  padding: 0;
+  display: flex; /* Use flexbox for horizontal alignment */
+  justify-content: center; /* Center items horizontally */
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+/* Style for each list item (each page link) */
+.custom-nav-bar li {
+  margin: 0 15px; /* Spacing between links */
+}
+
+/* Style for the links themselves */
+.custom-nav-bar a {
+  text-decoration: none; /* Remove underline */
+  color: #333333; /* Dark gray for text, similar to WELL BAKERY logo */
+  font-family: 'Open Sans', Arial, sans-serif; /* A clean, modern font */
+  font-weight: 600; /* Semi-bold */
+  font-size: 16px;
+  padding: 5px 0;
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  display: block; /* Make the entire link area clickable */
+}
+
+/* Hover effect for links */
+.custom-nav-bar a:hover,
+.custom-nav-bar a:focus {
+  color: #DA7D5E; /* A warm, inviting color on hover, similar to your theme's keycolor */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .custom-nav-bar {
+    padding: 10px 10px;
+  }
+  .custom-nav-bar li {
+    margin: 0 10px;
+    margin-bottom: 5px; /* Add some vertical space for wrapped items */
+  }
+  .custom-nav-bar a {
+    font-size: 14px;
+  }
+}
+</style>
+
+<b:if cond='data:blog.url != data:blog.homepageUrl'>
+  <nav class="custom-nav-bar">
+    <ul>
+      <li><a href="https://wellbakeryy.blogspot.com/">الرئيسية</a></li>
+      <li><a href="https://wellbakeryy.blogspot.com/p/blog-page_4.html">قائمة القهوة</a></li>
+      <li><a href="https://wellbakeryy.blogspot.com/p/blog-page_10.html">اتصل بنا</a></li>
+      <li><a href="https://wellbakeryy.blogspot.com/p/checkout.html">صفحة الدفع</a></li>
+      <li><a href="https://wellbakeryy.blogspot.com/p/blog-page_55.html">لوحة المشرفين</a></li>
+    </ul>
+  </nav>
+</b:if>

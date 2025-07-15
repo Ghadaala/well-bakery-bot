@@ -1,0 +1,253 @@
+<p>
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>📊 لوحة المشرفين</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  background-color: #f5f2e7;
+  padding: 20px;
+  direction: rtl;
+}
+section {
+  margin-bottom: 40px;
+}
+h2 {
+  color: #4e342e;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #6d4c41;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+canvas {
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<section id="table-section">
+  <h2>📋 جدول الطلبات</h2>
+  <div id="data-table">جاري تحميل البيانات...</div>
+  <button onclick="downloadCSV()">📥 تحميل CSV</button>
+  <button onclick="downloadExcel()">📥 تحميل Excel</button>
+</section>
+
+<section id="charts-section">
+  <h2>📈 الرسوم البيانية</h2>
+  <canvas id="chart1" width="400"></canvas>
+  <canvas id="chart2" width="400"></canvas>
+  <canvas id="chart3" width="400"></canvas>
+  <button onclick="downloadChartsPDF()">📥 تحميل الرسوم PDF</button>
+</section>
+
+<section id="analytics-section">
+  <h2>📋 التحليلات والإحصاءات</h2>
+  <div id="analytics">
+    جاري التحليل...
+  </div>
+  <button onclick="downloadAnalyticsTXT()">📥 تحميل التحليلات TXT</button>
+</section>
+
+<script>
+const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmdTPRwt6Vt7_qg1XXrUqk5aOyVnpztlR7L7A-St11H1H0E6r2-PgqAOCAAT1oM2cxSyHczcv6HMNa/pub?output=csv";
+let data = [];
+
+function parseCSV(csv) {
+  return csv.split('\n').map(row => row.split(','));
+}
+
+function renderTable(data) {
+  let html = "<table><thead><tr>";
+  data[0].forEach(h => html += `<th>${h}</th>`);
+  html += "</tr></thead><tbody>";
+
+  for (let i = 1; i < data.length; i++) {
+    html += "<tr>";
+    data[i].forEach(c => html += `<td>${c}</td>`);
+    html += "</tr>";
+  }
+
+  html += "</tbody></table>";
+  document.getElementById("data-table").innerHTML = html;
+}
+
+// تحميل CSV
+function downloadCSV() {
+  const bom = "\uFEFF";
+  const csvContent = bom + data.map(r => r.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "الطلبات.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// تحميل Excel
+function downloadExcel() {
+  const tableHTML = document.querySelector("#data-table table").outerHTML.replace(/ /g, '%20');
+  const a = document.createElement("a");
+  a.href = 'data:application/vnd.ms-excel,' + tableHTML;
+  a.download = 'الطلبات.xls';
+  a.click();
+}
+
+// الرسوم البيانية
+function drawCharts() {
+  const orders = {};
+  const sizes = {};
+  const days = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const orderType = row[3].split("-")[0]?.trim();  // نوع القهوة
+    const size = row[3].split("-")[1]?.trim();       // الحجم
+    const day = row[5]?.split(",")[0];              // التاريخ
+
+    orders[orderType] = (orders[orderType] || 0) + 1;
+    sizes[size] = (sizes[size] || 0) + 1;
+    days[day] = (days[day] || 0) + 1;
+  }
+
+  new Chart(document.getElementById("chart1"), {
+    type: "bar",
+    data: {
+      labels: Object.keys(orders),
+      datasets: [{ label: "أنواع القهوة", data: Object.values(orders), backgroundColor: "#6d4c41" }]
+    }
+  });
+
+  new Chart(document.getElementById("chart2"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(sizes),
+      datasets: [{
+        label: "الأحجام",
+        data: Object.values(sizes),
+        backgroundColor: [
+          "#FF6384",  // وردي
+          "#36A2EB",  // أزرق
+          "#6d4c41"   // بني
+        ]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+
+  new Chart(document.getElementById("chart3"), {
+    type: "line",
+    data: {
+      labels: Object.keys(days),
+      datasets: [{ label: "عدد الطلبات حسب اليوم", data: Object.values(days), borderColor: "#6d4c41", fill: false }]
+    }
+  });
+}
+
+// تحميل الرسوم PDF
+function downloadChartsPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("📈 الرسوم البيانية", 10, 10);
+
+  ["chart1", "chart2", "chart3"].forEach((id, idx) => {
+    const canvas = document.getElementById(id);
+    const imgData = canvas.toDataURL("image/png");
+    doc.addImage(imgData, 'PNG', 10, 20 + idx * 60, 180, 50);
+  });
+
+  doc.save("الرسوم-البيانية.pdf");
+}
+
+// التحليلات
+function renderAnalytics() {
+  const totalOrders = data.length - 1;
+
+  const orderCounts = {};
+  const sizeCounts = {};
+  const dateCounts = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const orderType = row[3].split("-")[0]?.trim();
+    const size = row[3].split("-")[1]?.trim();
+    const date = row[5]?.split(",")[0];
+
+    orderCounts[orderType] = (orderCounts[orderType] || 0) + 1;
+    sizeCounts[size] = (sizeCounts[size] || 0) + 1;
+    dateCounts[date] = (dateCounts[date] || 0) + 1;
+  }
+
+  const mostOrdered = Object.keys(orderCounts).reduce((a,b) => orderCounts[a] > orderCounts[b] ? a : b);
+  const mostSize = Object.keys(sizeCounts).reduce((a,b) => sizeCounts[a] > sizeCounts[b] ? a : b);
+  const busiestDay = Object.keys(dateCounts).reduce((a,b) => dateCounts[a] > dateCounts[b] ? a : b);
+
+  const html = `
+    <p>🔷 <b>إجمالي الطلبات:</b> ${totalOrders}</p>
+    <p>☕ <b>أكثر نوع قهوة طلبًا:</b> ${mostOrdered} (${orderCounts[mostOrdered]})</p>
+    <p>📏 <b>أكثر حجم طلبًا:</b> ${mostSize} (${sizeCounts[mostSize]})</p>
+    <p>📅 <b>أكثر يوم ازدحامًا:</b> ${busiestDay} (${dateCounts[busiestDay]})</p>
+  `;
+
+  document.getElementById("analytics").innerHTML = html;
+}
+
+// تحميل التحليلات TXT
+function downloadAnalyticsTXT() {
+  const text = document.getElementById("analytics").innerText;
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "التحليلات.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// تحميل البيانات وبدء كل شيء
+fetch(csvURL)
+  .then(res => res.text())
+  .then(csv => {
+    data = parseCSV(csv);
+    renderTable(data);
+    drawCharts();
+    renderAnalytics();
+  })
+  .catch(err => {
+    document.getElementById("data-table").innerText = "حدث خطأ أثناء تحميل البيانات.";
+    console.error(err);
+  });
+</script>
+
+</body>
+</html>
+
+
+</p>

@@ -1,0 +1,149 @@
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8"></meta>
+<title>💳 صفحة الدفع</title>
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  background-color: #f5f2e7;
+  padding: 20px;
+  color: #4e342e;
+}
+.container {
+  background: #fff7f0;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+h2 {
+  text-align: center;
+}
+p {
+  font-size: 14px;
+  margin: 8px 0;
+}
+button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #6d4c41;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #5a3c34;
+}
+#bankDetails {
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>💳 إتمام الدفع</h2>
+  <p id="orderDetails">جاري تحميل تفاصيل الطلب...</p>
+
+  <div id="paypal-container" style="margin-top: 20px;"></div>
+
+  <button id="whatsappBtn">📱 تأكيد عبر واتساب + إرسال الموقع</button>
+
+  <button onclick="showBankDetails()">🏦 الدفع عبر التحويل البنكي</button>
+  <div id="bankDetails">
+    📄 <b>بيانات التحويل البنكي:</b><br />
+    🏛️ البنك: بنك الراجحي<br />
+    🔢 الحساب: 1234567890<br />
+    👤 باسم: Well Bakery<br />
+    💬 بعد التحويل يرجى إرسال صورة الإيصال على واتساب.
+  </div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=BAAX_vX5NcAQq1g8krOCTNEY2DQa5hs1mdMJI9jwZCa2LQl8_Ff3v_o5TxkhQGb-UGhKLUAVH795EA-1sU&amp;components=hosted-buttons&amp;disable-funding=venmo&amp;currency=USD">
+</script>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const name = urlParams.get('name');
+const phone = urlParams.get('phone');
+const order = urlParams.get('order');
+const notes = urlParams.get('notes') || "بدون ملاحظات";
+const orderId = urlParams.get('orderId');
+
+// 📝 قائمة الأسعار
+const prices = {
+  "إسبريسو-صغير": 10,
+  "إسبريسو-متوسط": 12,
+  "إسبريسو-كبير": 14,
+  "لاتيه-صغير": 12,
+  "لاتيه-متوسط": 14,
+  "لاتيه-كبير": 16,
+  "كابتشينو-صغير": 11,
+  "كابتشينو-متوسط": 13,
+  "كابتشينو-كبير": 15,
+  "موكا مثلجة-صغير": 14,
+  "موكا مثلجة-متوسط": 16,
+  "موكا مثلجة-كبير": 18,
+  "أمريكانو-صغير": 9,
+  "أمريكانو-متوسط": 11,
+  "أمريكانو-كبير": 13
+};
+
+// 🔷 حساب السعر
+const [coffeeType, size] = order.split(" - ").map(e => e.trim());
+const priceKey = `${coffeeType}-${size}`;
+const price = prices[priceKey] || 0;
+
+const orderDetails = `
+  🆔 <b>رقم الطلب:</b> ${orderId}<br>
+  👤 <b>الاسم:</b> ${name}<br>
+  📞 <b>رقم الجوال:</b> ${phone}<br>
+  ☕ <b>الطلب:</b> ${order}<br>
+  💰 <b>السعر:</b> ${price} ريال<br>
+  📝 <b>ملاحظات:</b> ${notes}
+`;
+
+document.getElementById("orderDetails").innerHTML = orderDetails;
+
+// 🔷 PayPal Button
+paypal.HostedButtons({
+  hostedButtonId: "HB6C7PQFVYZTN"  // استبدل بـ Hosted ID الخاص بك
+}).render("#paypal-container");
+
+// 🔷 WhatsApp
+document.getElementById("whatsappBtn").addEventListener("click", () => {
+  const whatsappNumber = "966551567640";
+  const message = `
+🆔 رقم الطلب: ${orderId}
+مرحبًا ${name}! 🌟
+لقد طلبت: ${order}
+السعر: ${price} ريال
+رقمك: ${phone}
+ملاحظات: ${notes}
+
+📍 لو كانت هذه هي بيانات طلبك، يرجى إرسالها الآن مع موقعك الجغرافي لتأكيد التوصيل.`;
+  const encodedMessage = encodeURIComponent(message.trim());
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+});
+
+// 🔷 Bank Transfer
+function showBankDetails() {
+  document.getElementById("bankDetails").style.display = "block";
+}
+</script>
+
+</body>
+</html>
